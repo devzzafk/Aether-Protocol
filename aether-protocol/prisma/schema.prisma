@@ -1,0 +1,88 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Agent {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  apiKey      String   @unique @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  memories    Memory[]
+  relations   Relation[] @relation("AgentRelations")
+
+  @@map("agents")
+}
+
+model Memory {
+  id          String       @id @default(cuid())
+  agentId     String?
+  type        MemoryType
+  content     String
+  metadata    Json?
+  importance  Float        @default(0.5)
+  confidence  Float        @default(1.0)
+  expiresAt   DateTime?
+  accessCount Int          @default(0)
+  lastAccessed DateTime?
+  namespace   String       @default("global")
+  tags        String[]     @default([])
+  embedding   Float[]      @default([])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  agent       Agent?       @relation(fields: [agentId], references: [id])
+  fromRelations Relation[] @relation("FromMemory")
+  toRelations   Relation[] @relation("ToMemory")
+
+  @@index([agentId])
+  @@index([type])
+  @@index([namespace])
+  @@index([importance])
+  @@map("memories")
+}
+
+model Relation {
+  id        String   @id @default(cuid())
+  fromId    String
+  toId      String
+  relation  String
+  agentId   String?
+  weight    Float    @default(1.0)
+  createdAt DateTime @default(now())
+  from      Memory   @relation("FromMemory", fields: [fromId], references: [id], onDelete: Cascade)
+  to        Memory   @relation("ToMemory", fields: [toId], references: [id], onDelete: Cascade)
+  agent     Agent?   @relation("AgentRelations", fields: [agentId], references: [id])
+
+  @@unique([fromId, toId, relation])
+  @@map("relations")
+}
+
+model SyncLog {
+  id        String   @id @default(cuid())
+  agentId   String
+  action    String
+  memoryId  String?
+  payload   Json?
+  status    String   @default("success")
+  createdAt DateTime @default(now())
+
+  @@index([agentId])
+  @@map("sync_logs")
+}
+
+enum MemoryType {
+  FACT
+  EVENT
+  PREFERENCE
+  RELATIONSHIP
+  CONTEXT
+  SKILL
+  GOAL
+}

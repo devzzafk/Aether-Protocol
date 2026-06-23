@@ -1,0 +1,88 @@
+/* app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --aether-void: #07080f;
+    --aether-deep: #0d0f1c;
+    --aether-surface: #111424;
+    --aether-border: #1e2235;
+    --aether-muted: #2a2f4a;
+    --aether-accent: #6366f1;
+    --aether-glow: #818cf8;
+    --aether-cyan: #22d3ee;
+    --aether-purple: #a855f7;
+  }
+
+  * {
+    border-color: #1e2235;
+    scrollbar-width: thin;
+    scrollbar-color: #2a2f4a transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb {
+    background: #2a2f4a;
+    border-radius: 3px;
+  }
+}
+
+@layer components {
+  .aether-card {
+    @apply bg-aether-surface border border-aether-border rounded-xl;
+  }
+
+  .aether-glow-text {
+    background: linear-gradient(135deg, #818cf8 0%, #22d3ee 50%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .aether-button {
+    @apply bg-aether-accent hover:bg-aether-glow text-white font-medium px-4 py-2 rounded-lg transition-all duration-200;
+  }
+
+  .aether-button-ghost {
+    @apply border border-aether-border hover:border-aether-accent text-aether-dim hover:text-aether-text px-4 py-2 rounded-lg transition-all duration-200;
+  }
+
+  .aether-input {
+    @apply bg-aether-deep border border-aether-border rounded-lg px-3 py-2 text-aether-text placeholder:text-aether-dim focus:outline-none focus:border-aether-accent transition-colors w-full;
+  }
+
+  .aether-badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono;
+  }
+
+  .memory-node-FACT { @apply border-indigo-500 bg-indigo-500/10; }
+  .memory-node-EVENT { @apply border-cyan-500 bg-cyan-500/10; }
+  .memory-node-PREFERENCE { @apply border-purple-500 bg-purple-500/10; }
+  .memory-node-RELATIONSHIP { @apply border-amber-500 bg-amber-500/10; }
+  .memory-node-CONTEXT { @apply border-slate-500 bg-slate-500/10; }
+  .memory-node-SKILL { @apply border-emerald-500 bg-emerald-500/10; }
+  .memory-node-GOAL { @apply border-red-500 bg-red-500/10; }
+}
+
+@layer utilities {
+  .grid-bg {
+    background-image: linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .glow-ring {
+    box-shadow: 0 0 0 1px rgba(99,102,241,0.3), 0 0 20px rgba(99,102,241,0.1);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px rgba(129,140,248,0.5);
+  }
+}
